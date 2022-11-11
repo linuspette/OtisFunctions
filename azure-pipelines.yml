@@ -44,13 +44,13 @@ steps:
     projects: '**/OtisAPI.Test/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish'
+- task: AzureFunctionApp@1
   inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
+    azureSubscription: 'linusdev (14470a48-dadd-4ae9-9c73-6abf520fbf38)'
+    appType: 'functionApp'
+    appName: 'otisfunctions'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish to artifactd'
