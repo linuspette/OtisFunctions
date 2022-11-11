@@ -58,6 +58,7 @@ steps:
     publishWebProjects: false
     modifyOutputPath: false
     zipAfterPublish: false
+    
 - task: ArchiveFiles@2
   displayName: "Archive files"
   inputs:
