@@ -26,7 +26,7 @@ steps:
     RunAsPreJob: true
 
 - task: DotNetCoreCLI@2
-  displayName: 'Get NUGEt-pkgs'
+  displayName: 'Get NUGET-pkgs'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
@@ -45,15 +45,31 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish to artifactd'
+  displayName: 'Publish to artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'OtisFunctions'
 
-- task: AzureFunctionApp@1
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    arguments: '--configuration Release --output publish_output'
+    projects: '*.csproj'
+    publishWebProjects: false
+    modifyOutputPath: false
+    zipAfterPublish: false
+- task: ArchiveFiles@2
+  displayName: "Archive files"
+  inputs:
+    rootFolderOrFile: "- task: AzureFunctionApp@1
   inputs:
     azureSubscription: 'linusdev (14470a48-dadd-4ae9-9c73-6abf520fbf38)'
     appType: 'functionApp'
     appName: 'otisfunctions'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-    deploymentMethod: 'auto'
+    package: '$(System.DefaultWorkingDirectory)/publish_output'
+    deploymentMethod: 'auto'"
+    includeRootFolder: false
+    archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+
+
