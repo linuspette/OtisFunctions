@@ -37,12 +37,6 @@ stages:
         KeyVaultName: 'LinusDev'
         SecretsFilter: '*'
         RunAsPreJob: true
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Get NUGEt-pkgs'
-      inputs:
-        command: 'restore'
-        projects: '**/*.csproj'
         
     - task: DotNetCoreCLI@2
       displayName: Build
