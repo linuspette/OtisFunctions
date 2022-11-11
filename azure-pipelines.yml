@@ -30,6 +30,10 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
+    
+    - task: UseDotNet@2
+      inputs:
+        version: '6.0.x'
     - task: AzureKeyVault@2
       displayName: 'Get Keyvault secrets'
       inputs:
