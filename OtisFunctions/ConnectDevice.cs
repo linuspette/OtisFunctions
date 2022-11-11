@@ -1,30 +1,32 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Devices;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using OtisFunctions.Infrastructure;
 using OtisFunctions.Models;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace OtisFunctions
 {
     public static class ConnectDevice
     {
-       private static readonly string iothub_connectionstring = Environment.GetEnvironmentVariable("IotHub");
 
-       private static readonly RegistryManager _registryManager =
-            RegistryManager.CreateFromConnectionString(Environment.GetEnvironmentVariable("IotHub"));
-        
         [FunctionName("ConnectDevice")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
-        
+
         {
+            var iothub_connectionstring = await KeyVaultConnection.GetSecretAsync("IotHub");
+
+            var _registryManager =
+                RegistryManager.CreateFromConnectionString(iothub_connectionstring);
+
+
             try
             {
                 var body = JsonConvert.DeserializeObject<DeviceRequest>(
@@ -49,5 +51,5 @@ namespace OtisFunctions
         }
     }
 
-   
+
 }
