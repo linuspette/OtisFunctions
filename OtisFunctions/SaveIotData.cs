@@ -1,5 +1,5 @@
+using Azure.Messaging.EventHubs;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -43,7 +43,7 @@ namespace OtisFunctions
                 try { data.Owner = message.Properties["owner"].ToString() ?? twin.Properties.Reported["owner"]; }
                 catch { }
 
-                try { data.Data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Body.Array)); }
+                try { data.Data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Data.ToArray())); }
                 catch { }
 
                 output = data;
@@ -52,7 +52,7 @@ namespace OtisFunctions
             {
                 output = null;
             }
-            log.LogInformation($"C# IoT Hub trigger function processed a message: {Encoding.UTF8.GetString(message.Body.Array)}");
+            log.LogInformation($"C# IoT Hub trigger function processed a message: {Encoding.UTF8.GetString(message.Data.ToArray())}");
         }
     }
 }
