@@ -10,7 +10,7 @@ public static class KeyVaultConnection
     private static readonly string KeyVaultUri = "https://linusdev.vault.azure.net/";
 
     private static readonly SecretClient _secretClient = new SecretClient(new Uri(KeyVaultUri), new DefaultAzureCredential());
-    public static async Task<string> GetSecretAsync(string secretName)
+    public static async Task<string> GetIotHubSecretAsync(string secretName)
     {
         try
         {

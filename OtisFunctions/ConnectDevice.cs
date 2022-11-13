@@ -17,11 +17,11 @@ namespace OtisFunctions
 
         [FunctionName("ConnectDevice")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
 
         {
-            var iothub_connectionstring = await KeyVaultConnection.GetSecretAsync("IotHub");
+            var iothub_connectionstring = await KeyVaultConnection.GetIotHubSecretAsync("IotHub");
 
             var _registryManager =
                 RegistryManager.CreateFromConnectionString(iothub_connectionstring);
