@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtisFunctions", "OtisFunctions\OtisFunctions.csproj", "{4D050722-6F4F-4547-A3C9-03F9F0AE542A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtisFunctions.Tests", "OtisFunctions.Tests\OtisFunctions.Tests.csproj", "{21A056B6-D2D7-4E82-B544-D1FE31045692}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtisFunctions.Tests", "OtisFunctions.Tests\OtisFunctions.Tests.csproj", "{21A056B6-D2D7-4E82-B544-D1FE31045692}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
