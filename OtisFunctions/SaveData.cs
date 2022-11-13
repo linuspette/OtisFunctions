@@ -1,5 +1,6 @@
-using Azure.Messaging.EventHubs;
+
 using Microsoft.Azure.Devices;
+using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -12,13 +13,14 @@ using IoTHubTrigger = Microsoft.Azure.WebJobs.EventHubTriggerAttribute;
 
 namespace OtisFunctions
 {
-    public class SaveIotData
+    public class SaveData
     {
         private static HttpClient client = new HttpClient();
 
-        [FunctionName("SaveIotData")]
+        [FunctionName("SaveData")]
         public void Run([IoTHubTrigger("messages/events", Connection = "IotHubEndpoint")] EventData message,
-            [CosmosDB(databaseName: "LpSmartDevices", collectionName: "data", ConnectionStringSetting = "CosmosDB", CreateIfNotExists = true)] out dynamic output, ILogger log)
+            [CosmosDB(databaseName: "LpSmartDevices", collectionName: "data", ConnectionStringSetting = "CosmosDB", CreateIfNotExists = true)] out dynamic output,
+            ILogger log)
         {
             try
             {

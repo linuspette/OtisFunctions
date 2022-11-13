@@ -5,8 +5,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using OtisFunctions.Infrastructure;
 using OtisFunctions.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,37 +17,29 @@ namespace OtisFunctions
 
         [FunctionName("ConnectDevice")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "devices/connect")] HttpRequest req,
             ILogger log)
 
         {
-            var iothub_connectionstring = await KeyVaultConnection.GetIotHubSecretAsync("IotHub");
-
-            var _registryManager =
-                RegistryManager.CreateFromConnectionString(iothub_connectionstring);
-
-
             try
             {
-                var body = JsonConvert.DeserializeObject<DeviceRequest>(
-                    await new StreamReader(req.Body).ReadToEndAsync());
-                var device = await _registryManager.GetDeviceAsync(body.DeviceId);
+                using var registryManager =
+                    RegistryManager.CreateFromConnectionString(Environment.GetEnvironmentVariable("IotHub"));
 
-                if (device is null)
-                {
-                    device = await _registryManager.AddDeviceAsync(new Device(body.DeviceId));
-                }
+                var body = JsonConvert.DeserializeObject<DeviceRequest>(await new StreamReader(req.Body).ReadToEndAsync());
 
-                var connectionString =
-                    $"{iothub_connectionstring.Split(";")[0]};DeviceId={device.Id};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
+                var device = await registryManager.GetDeviceAsync(body.DeviceId);
+                //If device is null, create new device
+                device ??= await registryManager.AddDeviceAsync(new Device(body.DeviceId));
 
-                return new OkObjectResult(connectionString);
+                var conString = $"{Environment.GetEnvironmentVariable("IotHub").Split(";")[0]};DeviceId={device.Id};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
+
+                return new OkObjectResult(conString);
             }
-            catch
+            catch (Exception ex)
             {
-                return new BadRequestResult();
+                return new BadRequestObjectResult("Unable to connect to device");
             }
-
         }
     }
 
