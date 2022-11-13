@@ -43,7 +43,7 @@ namespace OtisFunctions
                 try { data.Owner = message.Properties["owner"].ToString() ?? twin.Properties.Reported["owner"]; }
                 catch { }
 
-                try { data.Data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Data.ToArray())); }
+                try { data.Data = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(message.Body.ToArray())); }
                 catch { }
 
                 output = data;
@@ -52,7 +52,7 @@ namespace OtisFunctions
             {
                 output = null;
             }
-            log.LogInformation($"C# IoT Hub trigger function processed a message: {Encoding.UTF8.GetString(message.Data.ToArray())}");
+            log.LogInformation($"C# IoT Hub trigger function processed a message: {Encoding.UTF8.GetString(message.Body.ToArray())}");
         }
     }
 }
